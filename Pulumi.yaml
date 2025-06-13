@@ -1,0 +1,7 @@
+name: helios-k3
+description: A pulumi project for a k3s multi-node bootstrapping app
+runtime: go
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: go

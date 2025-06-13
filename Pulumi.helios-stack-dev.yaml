@@ -1,4 +1,4 @@
 config:
   helios-k3:ssh_user: "0x53c"
   helios-k3:master_mac_ip: 192.168.183.122
-  helios-k3:worker_mac_ip: '["192.168.183.158", "192.168.183.173"]'
+  helios-k3:worker_mac_ips: '["192.168.183.158", "192.168.183.173"]'

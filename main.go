@@ -46,7 +46,6 @@ mounts:
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
-		// --- 1. Load Configuration (No Changes) ---
 		conf := config.New(ctx, "")
 		sshUser := conf.Require("ssh_user")
 		masterMacName := conf.Require("master_mac_name")
@@ -64,7 +63,6 @@ func main() {
 			return fmt.Errorf("environment variable %s is not set", masterKeyEnvVar)
 		}
 		masterSshPrivateKey := pulumi.ToSecret(pulumi.String(masterPrivateKeyStr)).(pulumi.StringOutput)
-
 		masterMacConnection := remote.ConnectionArgs{
 			Host:       pulumi.String(masterMacIP),
 			User:       pulumi.String(sshUser),
@@ -96,7 +94,6 @@ func main() {
 				echo "Provisioning k3s and extracting details..." >&2
 				%[1]s/limactl shell k3s-master -- bash -c "
 					set -e
-					# FINAL FIX: Add --flannel-backend=wireguard-native to enable cluster networking over the LAN.
 					curl -sfL https://get.k3s.io | sh -s - server --tls-san %[2]s --flannel-backend=wireguard-native &> /tmp/k3s-install.log
 					
 					echo 'Waiting for k3s secrets...' >&2
@@ -189,7 +186,6 @@ func main() {
 					"
 					
 					INTERNAL_IP=\$(%[3]s/limactl list %[1]s --json | %[3]s/jq -r .address)
-					# FINAL FIX: Removed the unnecessary backslash from '$ip'
 					%[3]s/jq -n --arg ip "\$INTERNAL_IP" '{ip: $ip}'
 				`, limaWorkerName, masterIPStr, brewBinPath, masterTokenStr, workerLimaConfig)
 				return script, nil
